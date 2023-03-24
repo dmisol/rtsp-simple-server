@@ -5,7 +5,6 @@ go 1.18
 require (
 	code.cloudfoundry.org/bytefmt v0.0.0
 	github.com/abema/go-mp4 v0.10.0
-	github.com/alecthomas/kong v0.7.1
 	github.com/aler9/gortsplib/v2 v2.1.3
 	github.com/asticode/go-astits v1.11.0
 	github.com/fsnotify/fsnotify v1.4.9
@@ -21,6 +20,7 @@ require (
 	github.com/pion/interceptor v0.1.11
 	github.com/pion/rtp v1.7.13
 	github.com/pion/webrtc/v3 v3.1.47
+	github.com/rs/zerolog v1.29.0
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/crypto v0.5.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -36,6 +36,7 @@ require (
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect

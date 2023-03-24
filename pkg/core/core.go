@@ -8,7 +8,6 @@ import (
 	"os/signal"
 	"reflect"
 
-	"github.com/alecthomas/kong"
 	"github.com/aler9/gortsplib/v2"
 	"github.com/gin-gonic/gin"
 
@@ -19,7 +18,10 @@ import (
 	"github.com/aler9/rtsp-simple-server/pkg/rlimit"
 )
 
-var version = "v0.0.0"
+var (
+	version = "v0.0.0"
+	studioID string
+)
 
 // Core is an instance of rtsp-simple-server.
 type Core struct {
@@ -49,35 +51,11 @@ type Core struct {
 	done chan struct{}
 }
 
-var cli struct {
-	Version  bool   `help:"print version"`
-	Confpath string `arg:"" default:"rtsp-simple-server.yml"`
-}
-
 // New allocates a core.
 func New(args []string) (*Core, bool) {
-	parser, err := kong.New(&cli,
-		kong.Description("rtsp-simple-server / MediaMTX "+version),
-		kong.UsageOnError(),
-		kong.ValueFormatter(func(value *kong.Value) string {
-			switch value.Name {
-			case "confpath":
-				return "path to a config file. The default is rtsp-simple-server.yml."
 
-			default:
-				return kong.DefaultHelpValueFormatter(value)
-			}
-		}))
-	if err != nil {
-		panic(err)
-	}
-	_, err = parser.Parse(args)
-	parser.FatalIfErrorf(err)
-
-	if cli.Version {
-		fmt.Println(version)
-		os.Exit(0)
-	}
+	var err error
+	studioID = args[1]
 
 	// on Linux, try to raise the number of file descriptors that can be opened
 	// to allow the maximum possible number of clients
@@ -91,7 +69,7 @@ func New(args []string) (*Core, bool) {
 	p := &Core{
 		ctx:            ctx,
 		ctxCancel:      ctxCancel,
-		confPath:       cli.Confpath,
+		confPath:       args[0],
 		chAPIConfigSet: make(chan *conf.Conf),
 		done:           make(chan struct{}),
 	}
@@ -195,7 +173,7 @@ func (p *Core) createResources(initial bool) error {
 		p.logger, err = logger.New(
 			logger.Level(p.conf.LogLevel),
 			p.conf.LogDestinations,
-			p.conf.LogFile,
+			studioID,
 		)
 		if err != nil {
 			return err
